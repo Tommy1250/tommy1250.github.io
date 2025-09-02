@@ -1,0 +1,109 @@
+:root {
+    --gap: 7px;
+    --bg: #0f1115;
+    --card: #141414;
+    --text: #e7eaf0;
+    --muted: #9aa3b2;
+    --radius: 10px;
+}
+
+div.gallery {
+    margin: 0px;
+    border: 1px solid #ccc;
+    width: 100%;
+    border-radius: 10px;
+}
+
+div.gallery:hover {
+    border: 1px solid #777;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+div.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+.gal-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+    gap: 7px;
+    place-items: center;
+}
+
+/* Masonry powered by CSS columns */
+.masonry {
+    column-width: 320px;
+    /* min width of a column */
+    column-gap: var(--gap);
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto 60px;
+}
+
+.card {
+    /* each item */
+    break-inside: avoid;
+    /* keep item from splitting across columns */
+    margin: 0 0 var(--gap);
+    display: block;
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    transform: translateZ(0);
+    /* paint optimization */
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: auto;
+    filter: saturate(1.05);
+    transition: scale 0.25s ease;
+}
+
+.card:hover img {
+    scale: 1.02;
+}
+
+.meta {
+    padding: 12px 14px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.meta .title {
+    font-weight: 700;
+}
+
+.meta .sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* Optional: lightbox-ish focus state */
+.card:focus-visible {
+    outline: 2px solid #7aa2ff;
+    outline-offset: 3px;
+}
+
+/* Responsive tweaks: reduce gaps on tiny screens */
+@media (max-width: 460px) {
+    :root {
+        --gap: 7px;
+    }
+
+    .masonry {
+        padding: 14px;
+    }
+}

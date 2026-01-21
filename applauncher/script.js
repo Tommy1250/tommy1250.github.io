@@ -73,3 +73,79 @@ function redirectToAppLauncherDownload() {
 function redirectToHome() {
     window.location.href = "/";
 }
+
+
+async function loadReleaseInfo() {
+    const container = document.createElement('section');
+    container.id = 'release-info';
+    container.className = 'release-card';
+    container.innerHTML = `<h2>Latest Release</h2><p class="muted">Loading...</p>`;
+    const patchNotesHolder = document.getElementById("patchNotes");
+    patchNotesHolder.appendChild(container);
+
+    try {
+        const res = await fetch('https://api.github.com/repos/Tommy1250/AppLauncherUI/releases/latest');
+        if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+        const data = await res.json();
+
+        const notes = data.body ? data.body : 'No patch notes available.';
+
+        const asset = data.assets && data.assets.find(a => a.name && a.name.toLowerCase().endsWith('.exe'));
+        const downloadUrl = asset ? asset.browser_download_url : (data.html_url || 'https://github.com/Tommy1250/AppLauncherUI/releases');
+
+        let checksum = 'Checksum not provided.';
+        if (data.body) {
+            checksum = asset.digest
+        }
+        
+        const dlBtn = document.getElementById('download-btn');
+        if (dlBtn && downloadUrl) {
+            dlBtn.href = downloadUrl;
+        }
+
+        const versionInfoTemp = document.getElementById("versionInfo");
+        const versionInfoHolder = versionInfoTemp.content.cloneNode(true);
+
+        const tagName = versionInfoHolder.getElementById("tagname");
+        tagName.innerText = `${data.tag_name || 'Unknown'}`;
+        
+        const patchNotesHolder2 = versionInfoHolder.getElementById("patchNotes");
+        patchNotesHolder2.innerText = notes;
+
+        const checksumHolder = versionInfoHolder.getElementById("checksum");
+        checksumHolder.innerText = checksum;
+
+        const downloadLinkHolder = versionInfoHolder.getElementById("downloadLink");
+        downloadLinkHolder.href = downloadUrl;
+
+        container.innerHTML = "";
+        container.appendChild(versionInfoHolder);
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<h2>Latest Release</h2><p class="muted">Failed to load release info.</p>`;
+    }
+}
+loadReleaseInfo();
+
+const overlay = document.getElementById("overlay");
+const appImg = document.getElementById("appimg");
+const backGround = document.getElementById("bg");
+
+function popupPhoto(pName){
+    appImg.src = `/images/algallery/${pName}`;
+    overlay.classList.remove("hidden");
+    setTimeout(function () {
+        overlay.classList.add('visible');
+    }, 60);
+}
+
+window.addEventListener('scroll', function () {
+    overlay.style.top = window.innerHeight / 2 + window.scrollY + 'px';
+});
+
+backGround.onclick = () => {
+    overlay.classList.remove("visible");
+    setTimeout(() => {
+        overlay.classList.add("hidden");
+    }, 60)
+}

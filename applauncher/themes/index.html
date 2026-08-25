@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AppLauncherUI Themes</title>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --panel: #14171c;
+    --panel-hover: #191d23;
+    --border: #22262c;
+    --text: #e8eaed;
+    --muted: #8b92a0;
+    --accent: #6c5ce7;
+    --accent-dim: #6c5ce733;
+    --cta: #f5a623;
+    --cta-text: #14171c;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 56px 24px 40px;
+    max-width: 1080px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 560px;
+    line-height: 1.5;
+    margin: 0 0 20px;
+  }
+
+  .repo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .repo-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  #status {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 40px 0;
+  }
+
+  #status.error { color: #e0645a; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .card:hover { border-color: var(--accent-dim); transform: translateY(-2px); }
+
+  /* Mini live preview mirroring the real AppLauncher DOM (search bar + app grid),
+     colored with the theme's actual CSS custom properties, matched by their real names. */
+  .preview {
+    padding: 10px 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--body-bg-color, rgb(18, 18, 18));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .pv-toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pv-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 15px;
+    min-width: 0;
+    padding: 0 6px;
+    background: var(--search-input-bg, white);
+    border-radius: 9999px;
+  }
+  .pv-search-placeholder {
+    width: 40%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--search-input-text, black);
+    opacity: 0.35;
+  }
+  .pv-search-clear {
+    font-size: 6px;
+    line-height: 1;
+    color: var(--search-button-text, #374151);
+    white-space: nowrap;
+  }
+  .pv-iconbtn {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    background: var(--iconbtn-color, white);
+    opacity: 0.85;
+    flex: 0 0 auto;
+  }
+  .pv-grid {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 6px;
+  }
+  .pv-app {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .pv-poster {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 150 / 225;
+    border-radius: 5px;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--body-text-color, whitesmoke) 0%, transparent 140%);
+    background-color: var(--appDiv-hover-bg, rgba(229, 226, 226, 0.27));
+    opacity: 0.9;
+  }
+  .pv-poster.pv-focus {
+    outline: 2px solid var(--controller-focus-color, #e1e3e1);
+    outline-offset: 1px;
+    opacity: 1;
+  }
+  .pv-poster.pv-tagged::after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--app-category-overlay-bg, rgba(0, 0, 0, 0.7));
+  }
+  .pv-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+  .pv-name {
+    flex: 1;
+    min-width: 0;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--body-text-color, whitesmoke);
+    opacity: 0.4;
+  }
+  .pv-dots {
+    flex: 0 0 auto;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: var(--appDiv-bottom-button-color, white);
+    box-shadow: 4px 0 0 var(--appDiv-bottom-button-color, white), 8px 0 0 var(--appDiv-bottom-button-color, white);
+    opacity: 0.8;
+    margin-right: 4px;
+  }
+
+  .card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+
+  .theme-name {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .theme-author {
+    font-size: 12px;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .theme-desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0 0 20px;
+    flex: 1;
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--cta);
+    color: var(--cta-text);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 0;
+    border-radius: 6px;
+    transition: filter 0.15s ease;
+  }
+  .download-btn:hover { filter: brightness(1.08); }
+
+  footer {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Theme Gallery</div>
+  <h1>AppLauncherUI Themes</h1>
+  <p>Drop-in Themes for AppLauncher. Each card's preview mirrors the real app grid (to an extend).</p>
+  <a class="repo-link" href="https://github.com/Tommy1250/ApplauncherUIThemes" target="_blank" rel="noopener">↗ View source repo</a>
+</header>
+
+<main>
+  <div id="status">Loading themes…</div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>ApplauncherUIThemes · data fetched from the GitHub API at load time</footer>
+
+<script>
+  const OWNER = "Tommy1250";
+  const REPO = "ApplauncherUIThemes";
+  const API_ROOT = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+
+  const statusEl = document.getElementById("status");
+  const gridEl = document.getElementById("grid");
+
+  function titleCase(slug) {
+    return slug
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .split(" ")
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  }
+
+  function parseInfoMd(text) {
+    const authorMatch = text.match(/^Author:\s*(.+)$/im);
+    const descMatch = text.match(/^Description:\s*(.+)$/im);
+    return {
+      author: authorMatch ? authorMatch[1].trim() : "Unknown",
+      description: descMatch ? descMatch[1].trim() : ""
+    };
+  }
+  function parseCssVars(cssText) {
+    const re = /--([\w-]+)\s*:\s*([^;{}]+);/g;
+    const vars = {};
+    let m;
+    while ((m = re.exec(cssText)) !== null) {
+      vars[m[1]] = m[2].trim();
+    }
+    return vars;
+  }
+
+  async function fetchJson(url) {
+    const res = await fetch(url, { headers: { Accept: "application/vnd.github.v3+json" } });
+    if (!res.ok) {
+      if (res.status === 403) throw new Error("GitHub API rate limit hit — try again in a bit.");
+      if (res.status === 404) throw new Error("Repo or folder not found.");
+      throw new Error(`GitHub API error (${res.status})`);
+    }
+    return res.json();
+  }
+
+  function renderCard(theme) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const preview = document.createElement("div");
+    preview.className = "preview";
+    Object.entries(theme.vars).forEach(([name, value]) => {
+      preview.style.setProperty(`--${name}`, value);
+    });
+    preview.innerHTML = `
+      <div class="pv-toolbar">
+        <div class="pv-search">
+          <span class="pv-search-placeholder"></span>
+          <span class="pv-search-clear">clear</span>
+        </div>
+        <span class="pv-iconbtn"></span>
+        <span class="pv-iconbtn"></span>
+        <span class="pv-iconbtn"></span>
+        <span class="pv-iconbtn"></span>
+      </div>
+      <div class="pv-grid">
+        ${[0, 1, 2, 3].map(i => `
+          <div class="pv-app">
+            <div class="pv-poster${i === 1 ? " pv-focus" : ""}${i === 2 ? " pv-tagged" : ""}"></div>
+            <div class="pv-bottom">
+              <span class="pv-name"></span>
+              <span class="pv-dots"></span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    const body = document.createElement("div");
+    body.className = "card-body";
+    body.innerHTML = `
+      <p class="theme-name">${theme.name}</p>
+      <p class="theme-author">by ${theme.author}</p>
+      <p class="theme-desc">${theme.description || "No description provided."}</p>
+      <a class="download-btn" href="${theme.cssUrl}" download="${theme.cssFileName}">↓ Download ${theme.cssFileName}</a>
+    `;
+
+    card.appendChild(preview);
+    card.appendChild(body);
+    gridEl.appendChild(card);
+  }
+
+  async function loadThemes() {
+    try {
+      const rootItems = await fetchJson(API_ROOT);
+      const folders = rootItems.filter(item => item.type === "dir");
+
+      if (folders.length === 0) {
+        statusEl.textContent = "No theme folders found in the repo.";
+        return;
+      }
+
+      statusEl.textContent = `Loading ${folders.length} theme${folders.length === 1 ? "" : "s"}…`;
+
+      const results = await Promise.allSettled(
+        folders.map(async folder => {
+          const contents = await fetchJson(`${API_ROOT}/${encodeURIComponent(folder.path)}`);
+          const cssFile = contents.find(f => f.name.toLowerCase().endsWith(".css"));
+          const infoFile = contents.find(f => f.name.toLowerCase() === "info.md");
+
+          if (!cssFile) throw new Error(`${folder.name}: no .css file found`);
+
+          const [cssText, infoText] = await Promise.all([
+            fetch(cssFile.download_url).then(r => r.text()),
+            infoFile ? fetch(infoFile.download_url).then(r => r.text()) : Promise.resolve("")
+          ]);
+
+          const { author, description } = parseInfoMd(infoText);
+          const vars = parseCssVars(cssText);
+
+          return {
+            name: titleCase(folder.name),
+            author,
+            description,
+            cssUrl: cssFile.download_url,
+            cssFileName: cssFile.name,
+            vars
+          };
+        })
+      );
+
+      const themes = results
+        .filter(r => r.status === "fulfilled")
+        .map(r => r.value)
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      const failed = results.filter(r => r.status === "rejected");
+
+      if (themes.length === 0) {
+        statusEl.className = "error";
+        statusEl.textContent = "Couldn't load any themes. " + (failed[0]?.reason?.message || "");
+        return;
+      }
+
+      statusEl.remove();
+      themes.forEach(renderCard);
+
+      if (failed.length > 0) {
+        const warn = document.createElement("div");
+        warn.style.cssText = "grid-column: 1 / -1; color: var(--muted); font-family: var(--mono); font-size: 12px; margin-top: 8px;";
+        warn.textContent = `Skipped ${failed.length} folder(s) that didn't match the expected structure.`;
+        gridEl.appendChild(warn);
+      }
+    } catch (err) {
+      statusEl.className = "error";
+      statusEl.textContent = err.message || "Something went wrong loading the themes.";
+    }
+  }
+
+  loadThemes();
+</script>
+
+</body>
+</html>

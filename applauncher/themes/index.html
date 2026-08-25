@@ -109,8 +109,18 @@
   }
   .card:hover { border-color: var(--accent-dim); transform: translateY(-2px); }
 
-  /* Mini live preview mirroring the real AppLauncher DOM (search bar + app grid),
-     colored with the theme's actual CSS custom properties, matched by their real names. */
+  /* Real screenshot mode — used when a theme folder includes preview.png */
+  .preview-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--panel-hover);
+  }
+
+  /* Fallback: mini live preview mirroring the real AppLauncher DOM (search bar + app grid),
+     colored with the theme's actual CSS custom properties, matched by their real names.
+     Used only when a theme has no preview.png. */
   .preview {
     padding: 10px 10px 8px;
     display: flex;
@@ -278,7 +288,7 @@
 <header>
   <div class="eyebrow">Theme Gallery</div>
   <h1>AppLauncherUI Themes</h1>
-  <p>Drop-in Themes for AppLauncher. Each card's preview mirrors the real app grid (to an extend).</p>
+  <p>Drop-in CSS skins for AppLauncher, pulled live from the repo. Shows each theme's actual preview.png screenshot when the folder has one, otherwise a live mockup styled with that theme's CSS variables.</p>
   <a class="repo-link" href="https://github.com/Tommy1250/ApplauncherUIThemes" target="_blank" rel="noopener">↗ View source repo</a>
 </header>
 
@@ -314,6 +324,9 @@
       description: descMatch ? descMatch[1].trim() : ""
     };
   }
+
+  // Pull every custom property a theme defines, verbatim — we apply these with
+  // their real names (matching style.css), so no guessing about roles is needed.
   function parseCssVars(cssText) {
     const re = /--([\w-]+)\s*:\s*([^;{}]+);/g;
     const vars = {};
@@ -338,34 +351,44 @@
     const card = document.createElement("div");
     card.className = "card";
 
-    const preview = document.createElement("div");
-    preview.className = "preview";
-    Object.entries(theme.vars).forEach(([name, value]) => {
-      preview.style.setProperty(`--${name}`, value);
-    });
-    preview.innerHTML = `
-      <div class="pv-toolbar">
-        <div class="pv-search">
-          <span class="pv-search-placeholder"></span>
-          <span class="pv-search-clear">clear</span>
-        </div>
-        <span class="pv-iconbtn"></span>
-        <span class="pv-iconbtn"></span>
-        <span class="pv-iconbtn"></span>
-        <span class="pv-iconbtn"></span>
-      </div>
-      <div class="pv-grid">
-        ${[0, 1, 2, 3].map(i => `
-          <div class="pv-app">
-            <div class="pv-poster${i === 1 ? " pv-focus" : ""}${i === 2 ? " pv-tagged" : ""}"></div>
-            <div class="pv-bottom">
-              <span class="pv-name"></span>
-              <span class="pv-dots"></span>
-            </div>
+    if (theme.previewUrl) {
+      const img = document.createElement("img");
+      img.className = "preview-image";
+      img.src = theme.previewUrl;
+      img.alt = `${theme.name} theme preview`;
+      img.loading = "lazy";
+      card.appendChild(img);
+    } else {
+      const preview = document.createElement("div");
+      preview.className = "preview";
+      Object.entries(theme.vars).forEach(([name, value]) => {
+        preview.style.setProperty(`--${name}`, value);
+      });
+      preview.innerHTML = `
+        <div class="pv-toolbar">
+          <div class="pv-search">
+            <span class="pv-search-placeholder"></span>
+            <span class="pv-search-clear">clear</span>
           </div>
-        `).join("")}
-      </div>
-    `;
+          <span class="pv-iconbtn"></span>
+          <span class="pv-iconbtn"></span>
+          <span class="pv-iconbtn"></span>
+          <span class="pv-iconbtn"></span>
+        </div>
+        <div class="pv-grid">
+          ${[0, 1, 2, 3].map(i => `
+            <div class="pv-app">
+              <div class="pv-poster${i === 1 ? " pv-focus" : ""}${i === 2 ? " pv-tagged" : ""}"></div>
+              <div class="pv-bottom">
+                <span class="pv-name"></span>
+                <span class="pv-dots"></span>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      card.appendChild(preview);
+    }
 
     const body = document.createElement("div");
     body.className = "card-body";
@@ -376,7 +399,6 @@
       <a class="download-btn" href="${theme.cssUrl}" download="${theme.cssFileName}">↓ Download ${theme.cssFileName}</a>
     `;
 
-    card.appendChild(preview);
     card.appendChild(body);
     gridEl.appendChild(card);
   }
@@ -397,17 +419,18 @@
         folders.map(async folder => {
           const contents = await fetchJson(`${API_ROOT}/${encodeURIComponent(folder.path)}`);
           const cssFile = contents.find(f => f.name.toLowerCase().endsWith(".css"));
-          const infoFile = contents.find(f => f.name.toLowerCase() === "info.md");
+          const infoFile = contents.find(f => f.name.toLowerCase() === "readme.md");
+          const previewFile = contents.find(f => f.name.toLowerCase() === "preview.png");
 
           if (!cssFile) throw new Error(`${folder.name}: no .css file found`);
 
           const [cssText, infoText] = await Promise.all([
-            fetch(cssFile.download_url).then(r => r.text()),
+            previewFile ? Promise.resolve("") : fetch(cssFile.download_url).then(r => r.text()),
             infoFile ? fetch(infoFile.download_url).then(r => r.text()) : Promise.resolve("")
           ]);
 
           const { author, description } = parseInfoMd(infoText);
-          const vars = parseCssVars(cssText);
+          const vars = previewFile ? {} : parseCssVars(cssText);
 
           return {
             name: titleCase(folder.name),
@@ -415,6 +438,7 @@
             description,
             cssUrl: cssFile.download_url,
             cssFileName: cssFile.name,
+            previewUrl: previewFile ? previewFile.download_url : null,
             vars
           };
         })

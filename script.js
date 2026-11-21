@@ -67,7 +67,7 @@ for (let i = 0; i < animateText.length; i++) {
 }
 
 function redirectToWatchTogether(){
-    window.location.href = "https://wt.iamtommy.net/";
+    window.location.href = "https://wt.zerog.qd.je/";
 }
 
 function redirectToReplayDownload(){
@@ -75,7 +75,7 @@ function redirectToReplayDownload(){
 }
 
 function redirectToAppLauncherDownload() {
-    window.location.href = "https://github.com/Tommy1250/AppLauncherUI/releases/latest";
+    window.location.href = "https://github.com/Tommy1250/RocketLauncher/releases/latest";
 }
 
 function redirectToAppLauncherPage() {
@@ -87,11 +87,11 @@ function redirectToReplayPage() {
 }
 
 function redirectToTikTakToe(){
-    window.location.href = "https://xo.iamtommy.net/";
+    window.location.href = "https://xo.zerog.qd.je/";
 }
 
 function redirectToVoice() {
-    window.location.href = "https://voice.iamtommy.net";
+    window.location.href = "https://voice.zerog.qd.je/";
 }
 
 const overlay = document.getElementById("overlay");

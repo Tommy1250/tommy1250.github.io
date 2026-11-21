@@ -67,7 +67,7 @@ for (let i = 0; i < animateText.length; i++) {
 }
 
 function redirectToAppLauncherDownload() {
-    window.location.href = "https://github.com/Tommy1250/AppLauncherUI/releases/latest";
+    window.location.href = "https://github.com/Tommy1250/RocketLauncher/releases/latest";
 }
 
 function redirectToHome() {
@@ -84,14 +84,14 @@ async function loadReleaseInfo() {
     patchNotesHolder.appendChild(container);
 
     try {
-        const res = await fetch('https://api.github.com/repos/Tommy1250/AppLauncherUI/releases/latest');
+        const res = await fetch('https://api.github.com/repos/Tommy1250/RocketLauncher/releases/latest');
         if (!res.ok) throw new Error('GitHub API error: ' + res.status);
         const data = await res.json();
 
         const notes = data.body ? data.body : 'No patch notes available.';
 
         const asset = data.assets && data.assets.find(a => a.name && a.name.toLowerCase().endsWith('.exe'));
-        const downloadUrl = asset ? asset.browser_download_url : (data.html_url || 'https://github.com/Tommy1250/AppLauncherUI/releases');
+        const downloadUrl = asset ? asset.browser_download_url : (data.html_url || 'https://github.com/Tommy1250/RocketLauncher/releases');
 
         let checksum = 'Checksum not provided.';
         if (data.body) {

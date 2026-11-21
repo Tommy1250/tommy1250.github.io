@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Entry Bot — Terms of Service & Privacy Policy</title>
+  <title>Trumpeteer — Terms of Service & Privacy Policy</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--muted:#98a0b3;--accent:#7cdbff}
     html,body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#081126 0%, #071021 100%);color:#e6eef8;background-attachment: fixed;}
@@ -31,9 +31,9 @@
   <div class="wrap" role="main">
     <header>
       <div class="brand">
-        <div class="logo"><img class="logo" src="/images/entry.png"></div>
+        <div class="logo"><img class="logo" src="/public/entry.png"></div>
         <div>
-          <h1>Entry Bot</h1>
+          <h1>Trumpeteer</h1>
           <div class="meta">Two-page Terms & Privacy — Last updated: 1 October 2025, 06:08 GMT</div>
         </div>
       </div>
@@ -48,7 +48,7 @@
         <h2>Terms of Service</h2>
         <p class="muted">Last Updated: 1 October 2025, 06:08 GMT</p>
 
-        <p>By using <strong>Entry Bot</strong> ("the Bot"), you agree to the following Terms of Service:</p>
+        <p>By using <strong>Trumpeteer</strong> ("the Bot"), you agree to the following Terms of Service:</p>
 
         <h3>1. Use of the Bot</h3>
         <ul>
@@ -88,11 +88,11 @@
         <h2>Privacy Policy</h2>
         <p class="muted">Last Updated: 1 October 2025, 06:08 GMT</p>
 
-        <p>This Privacy Policy explains how <strong>Entry Bot</strong> handles your data.</p>
+        <p>This Privacy Policy explains how <strong>Trumpeteer</strong> handles your data.</p>
 
         <h3>1. Data Collected</h3>
         <ul>
-          <li>When you use the <code>register</code> command, Entry Bot collects:</li>
+          <li>When you use the <code>register</code> command, Trumpeteer collects:</li>
           <ul>
             <li>Your Discord User ID</li>
             <li>The audio file you upload</li>
@@ -103,13 +103,13 @@
         <h3>2. How Data is Used</h3>
         <ul>
           <li>Your User ID is used to associate you with your uploaded intro.</li>
-          <li>The audio file is stored so Entry Bot can play it when you join a voice channel.</li>
+          <li>The audio file is stored so Trumpeteer can play it when you join a voice channel.</li>
         </ul>
 
         <h3>3. Data Sharing</h3>
         <ul>
           <li>Your data is not sold or shared with third parties.</li>
-          <li>Data is only used within Entry Bot’s functionality.</li>
+          <li>Data is only used within Trumpeteer’s functionality.</li>
         </ul>
 
         <h3>4. Data Removal</h3>
@@ -119,12 +119,12 @@
 
         <h3>5. Data Retention</h3>
         <ul>
-          <li>Data is stored until you remove it with the <code>unregister</code> command or until Entry Bot is shut down.</li>
+          <li>Data is stored until you remove it with the <code>unregister</code> command or until Trumpeteer is shut down.</li>
         </ul>
 
         <h3>6. Children’s Privacy</h3>
         <ul>
-          <li>Entry Bot is not directed to children under 13. If you are under 13, you may not use the Bot.</li>
+          <li>Trumpeteer is not directed to children under 13. If you are under 13, you may not use the Bot.</li>
         </ul>
 
         <h3>7. Changes to This Policy</h3>
@@ -138,7 +138,7 @@
       </section>
 
       <footer>
-        <div class="muted">Entry Bot — lightweight intro player for Discord voice channels.</div>
+        <div class="muted">Trumpeteer — lightweight intro player for Discord voice channels.</div>
       </footer>
     </main>
   </div>
@@ -181,11 +181,11 @@
         const type = btn.getAttribute('data-type');
         if(type === 'tos'){
           const body = secTos.innerHTML;
-          const doc = buildStandalone('Entry Bot — Terms of Service', body);
+          const doc = buildStandalone('Trumpeteer — Terms of Service', body);
           downloadFile(doc, 'tos.html');
         } else {
           const body = secPrivacy.innerHTML;
-          const doc = buildStandalone('Entry Bot — Privacy Policy', body);
+          const doc = buildStandalone('Trumpeteer — Privacy Policy', body);
           downloadFile(doc, 'privacy.html');
         }
       });
